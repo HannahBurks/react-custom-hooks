@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import BookCard from "./BookCard";
 import { getBooks } from "../api/apiCalls";
 import Modal from "react-modal";
+import useGoogleBooks from "../hooks/useGoogleBooks";
 
 const customStyles = {
     content: {
@@ -16,31 +17,13 @@ const customStyles = {
 
 export default function BooksGrid({ query }) {
     const [modalIsOpen, setIsOpen] = useState(false);
-    const [books, setBooks] = useState([]);
-    const [error, setError] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        setIsLoading(true);
-        setError(false);
-        getBooks(query)
-            .then((books) => {
-                setBooks(books);
-            })
-            .catch((err) => {
-                setError(true);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-    }, [query]);
-
+    const booksData = useGoogleBooks(query)
     function closeModal() {
         setIsOpen(false);
     }
-
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Something went wrong...</p>;
+console.log(booksData)
+    if (booksData.isLoading) return <p>Loading...</p>;
+    if (booksData.error) return <p>Something went wrong...</p>;
     return (
         <main className="books__grid">
             <Modal
@@ -59,7 +42,8 @@ export default function BooksGrid({ query }) {
                     </ul>
                 </div>
             </Modal>
-            {books.map((book) => {
+            {booksData.books.map((book) => {
+                console.log(book, 'this is book')
                 return (
                     <BookCard
                         key={book.id}

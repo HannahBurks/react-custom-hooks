@@ -10,7 +10,7 @@
 
 1. Refactor BooksGrid to use a custom hook named `useGoogleBooks` - the file has been created for you in the `hooks` folder.
 
-You should be able to refactor `BooksGrid` with your custom hook to enable the component to still work.
+You should be able to refactor `BooksGrid` with your custom hook to enable the component to still work. ✅
 
 2. Google books also accepts the ability to limit the amount of results via a parameter of `maxResults`. Add some more functionality to your custom hook/app to enable the amount of results to be limited
 
