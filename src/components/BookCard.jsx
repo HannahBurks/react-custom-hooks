@@ -1,6 +1,6 @@
-export default function BookCard({ title, imgUrl, setIsOpen , setPublisher, publisher}) {
+export default function BookCard({ title, imgUrl, modal, setPublisher, publisher}) {
     const handleModal = () => {
-        setIsOpen(true);
+        modal.setIsOpen(true);
         setPublisher(publisher)
     };
     return (

@@ -3,6 +3,7 @@ import BookCard from "./BookCard";
 import Modal from "react-modal";
 import useGoogleBooks from "../hooks/useGoogleBooks";
 import usePublisherBooks from "../hooks/usePublisherBooks";
+import useModal from "../hooks/useModal";
 const customStyles = {
     content: {
         top: "50%",
@@ -11,19 +12,17 @@ const customStyles = {
         bottom: "auto",
         marginRight: "-50%",
         transform: "translate(-50%, -50%)",
+        color: 'black'
     },
 };
 
 export default function BooksGrid({query}) {
-    const [modalIsOpen, setIsOpen] = useState(false);
+  
     const [max, setMax] = useState(10)
     const [publisher, setPublisher] = useState()
     const booksData = useGoogleBooks(query, max)
     const publisherData = usePublisherBooks(publisher, 3)
-    function closeModal() {
-        setIsOpen(false);
-    }
-
+   const modal = useModal(false)
     function updateMax(event){
      setMax(+event.target.value)
      
@@ -45,31 +44,34 @@ export default function BooksGrid({query}) {
   <option value="10">10</option>
   <option value="20">20</option>
 </select>
+
             <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
+                isOpen={modal.modalIsOpen}
+                onRequestClose={modal.closeModal}
                 style={customStyles}
                 contentLabel="Publishers other books"
                 ariaHideApp={false}
             >
                 <div>
                     <h2 color="black">More books by this publisher</h2>
-                    <ul>{booksData.books.map((book) => {
+                    <ul>{publisherData.books.map((book) => {
+                        console.log(book)
                 return (
                     <li>
-                        {book.title}
+                        {book.volumeInfo.title}
                    </li>     
                 )})}
                     </ul>
                 </div>
             </Modal>
             {booksData.books.map((book) => {
+               
                 return (
                     <BookCard
                         key={book.id}
                         title={book.volumeInfo.title}
                         imgUrl={book.volumeInfo}
-                        setIsOpen={setIsOpen}
+                        modal={modal}
                         setPublisher={setPublisher}
                         publisher={book.volumeInfo.publisher}
                     />
