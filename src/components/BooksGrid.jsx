@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import BookCard from "./BookCard";
-import { getBooks } from "../api/apiCalls";
 import Modal from "react-modal";
 import useGoogleBooks from "../hooks/useGoogleBooks";
-
+import usePublisherBooks from "../hooks/usePublisherBooks";
 const customStyles = {
     content: {
         top: "50%",
@@ -15,17 +14,37 @@ const customStyles = {
     },
 };
 
-export default function BooksGrid({ query }) {
+export default function BooksGrid({query}) {
     const [modalIsOpen, setIsOpen] = useState(false);
-    const booksData = useGoogleBooks(query)
+    const [max, setMax] = useState(10)
+    const [publisher, setPublisher] = useState()
+    const booksData = useGoogleBooks(query, max)
+    const publisherData = usePublisherBooks(publisher, 3)
     function closeModal() {
         setIsOpen(false);
     }
-console.log(booksData)
+
+    function updateMax(event){
+     setMax(+event.target.value)
+     
+    }
+
     if (booksData.isLoading) return <p>Loading...</p>;
     if (booksData.error) return <p>Something went wrong...</p>;
+
     return (
+       
         <main className="books__grid">
+             <label for="bookNumber">View</label>
+
+
+
+<select name="bookAmount" id="bookAmount" onChange={updateMax}>
+<option value="">--Please choose an option--</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+</select>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -34,22 +53,25 @@ console.log(booksData)
                 ariaHideApp={false}
             >
                 <div>
-                    <h2>More books by this publisher</h2>
-                    <ul>
-                        <li>Book 1</li>
-                        <li>Book 2</li>
-                        <li>Book 3</li>
+                    <h2 color="black">More books by this publisher</h2>
+                    <ul>{booksData.books.map((book) => {
+                return (
+                    <li>
+                        {book.title}
+                   </li>     
+                )})}
                     </ul>
                 </div>
             </Modal>
             {booksData.books.map((book) => {
-                console.log(book, 'this is book')
                 return (
                     <BookCard
                         key={book.id}
                         title={book.volumeInfo.title}
                         imgUrl={book.volumeInfo}
                         setIsOpen={setIsOpen}
+                        setPublisher={setPublisher}
+                        publisher={book.volumeInfo.publisher}
                     />
                 );
             })}

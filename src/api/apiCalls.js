@@ -4,8 +4,9 @@ const googleBooks = axios.create({
     baseURL: "https://www.googleapis.com/books/v1/volumes",
 });
 
-export const getBooks = (query) => {
-    return googleBooks.get(`/`, { params: { q: query } }).then(({ data }) => {
+export const getBooks = (query, max) => {
+    console.log(max)
+    return googleBooks.get(`/`, { params: { q: query, maxResults: max} }).then(({ data }) => {
         return data.items;
     });
 };

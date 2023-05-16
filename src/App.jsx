@@ -10,7 +10,7 @@ function App() {
         <div className="App">
             <Header title="Book Store" />
             <QueryBar setQuery={setQuery} />
-            <BooksGrid query={query} />
+            <BooksGrid query={query}/>
         </div>
     );
 }
